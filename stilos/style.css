@@ -1,0 +1,149 @@
+/* -- GENERALES --- */
+body {
+  font-family: 'Poppins', Arial, sans-serif;
+  background-color: #fff8e1;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #ffb703;
+  color: #fff;
+  text-align: center;
+  padding: 30px 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+header img {
+  width: 120px;
+  height: auto;
+  margin-top: 10px;
+}
+
+header h1 {
+  font-size: 2.5em;
+  margin: 0;
+  color: #fff;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+}
+
+header h2 {
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+main {
+  padding: 40px 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* --- PRODUCTOS --- */
+#contenedor-productos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.producto {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  padding: 15px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.producto:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 12px rgba(0,0,0,0.25);
+}
+
+.producto h3 {
+  color: #fb8500;
+}
+
+.producto p {
+  font-weight: 500;
+  margin: 8px 0;
+}
+
+button {
+  background-color: #fb8500;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  margin-top: 10px;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #e76f51;
+}
+
+/* --- CARRITO --- */
+#carrito {
+  margin: 30px auto;
+  max-width: 600px;
+  text-align: left;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+#carrito div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding: 8px 0;
+}
+
+#carrito button {
+  background-color: #d62828;
+  border-radius: 50%;
+  padding: 5px 10px;
+  font-size: 14px;
+}
+
+#carrito button:hover {
+  background-color: #9d0208;
+}
+
+#total {
+  font-weight: bold;
+  font-size: 20px;
+  color: #264653;
+  margin: 15px 0;
+  text-align: right;
+}
+
+/* --- BOTÓN FINALIZAR --- */
+#finalizar {
+  display: block;
+  background-color: #023047;
+  padding: 14px 35px;
+  font-size: 17px;
+  margin: 25px auto 0;
+  border-radius: 8px;
+}
+
+#finalizar:hover {
+  background-color: #03506f;
+}
+
+/* --- FOOTER --- */
+footer {
+  background-color: #ffb703;
+  color: white;
+  text-align: center;
+  padding: 15px 0;
+  margin-top: 50px;
+  font-weight: 500;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+}
