@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Shop</title>
+  <link rel="stylesheet" href="./stilos/style.css">
+</head>
+<body>
+  <header>
+    <h1>The Shop</h1>
+    <img src="./image/logoshop.jpg" alt="logo">
+    <h2>Simulador de compras</h2>
+    <p>Este simulador de compra</p>
+  </header>
+
+<main>
+  <!-- Sección de promos -->
+  <section id="promos">
+    <h2>Promociones Destacadas</h2>
+    <div class="promo-container">
+      <div class="promo">
+        <img src="./image/promo bebida.png" alt="Promo 1">
+        <div class="promo-overlay">
+          <h3>Promo Bebida</h3>
+          <p>Oferta especial</p>
+        </div>
+      </div>
+      <div class="promo">
+        <img src="./image/chocolates.png" alt="Promo 2">
+        <div class="promo-overlay">
+          <h3>Chocolates</h3>
+          <p>¡2x1 por tiempo limitado!</p>
+        </div>
+      </div>
+      <div class="promo">
+        <img src="./image/chocolates1.png" alt="Promo 3">
+        <div class="promo-overlay">
+          <h3>Chocolates Premium</h3>
+          <p>Edición especial</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de productos -->
+  <section>
+    <h2>Productos disponibles</h2>
+    <p>Seleccioná los productos que quieras comprar:</p>
+    <div id="contenedor-productos"></div>
+  </section>
+
+  <!-- Carrito -->
+  <section>
+    <h2>Carrito de Compras</h2>
+    <div id="carrito"></div>
+    <div id="total"></div>
+    <button id="finalizar">Finalizar compra</button>
+  </section>
+</main>
+
+<footer>
+  <p>Mauri copyright</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
