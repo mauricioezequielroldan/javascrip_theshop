@@ -8,25 +8,30 @@ const productos = [
 
 let carrito = [];
 
-// ---- 
+// ---- Selectores ----
 const contenedor = document.getElementById("contenedor-productos");
 const contenedorCarrito = document.getElementById("carrito");
 const totalDiv = document.getElementById("total");
 const finalizarBtn = document.getElementById("finalizar");
 
-// ---- 
-productos.forEach(p => {
-  const card = document.createElement("div");
-  card.className = "producto";
-  card.innerHTML = `
-    <h3>${p.nombre}</h3>
-    <p>Precio: $${p.precio}</p>
-    <button onclick="agregarAlCarrito(${p.id})">Agregar al carrito</button>
-  `;
-  contenedor.appendChild(card);
-});
+// ---- Render productos ----
+function renderProductos() {
+  contenedor.innerHTML = ""; // limpiar
+  productos.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "producto";
+    card.innerHTML = `
+      <h3>${p.nombre}</h3>
+      <p>Precio: $${p.precio}</p>
+      <button>Agregar al carrito</button>
+    `;
+    const btn = card.querySelector("button");
+    btn.addEventListener("click", () => agregarAlCarrito(p.id));
+    contenedor.appendChild(card);
+  });
+}
 
-// ----carrito ----
+// ---- Agregar al carrito ----
 function agregarAlCarrito(id) {
   const producto = productos.find(p => p.id === id);
   const itemExistente = carrito.find(p => p.id === id);
@@ -38,61 +43,121 @@ function agregarAlCarrito(id) {
   }
 
   actualizarCarrito();
+  animacionCarrito();
 }
 
+// ---- Eliminar del carrito ----
 function eliminarDelCarrito(id) {
   carrito = carrito.filter(p => p.id !== id);
   actualizarCarrito();
 }
 
+// ---- Actualizar cantidad ----
+function actualizarCantidad(id, cantidad) {
+  const producto = carrito.find(p => p.id === id);
+  if (producto) {
+    producto.cantidad = parseInt(cantidad) || 1; // evita NaN
+    actualizarCarrito();
+  }
+}
+
+// ---- Actualizar carrito ----
 function actualizarCarrito() {
   contenedorCarrito.innerHTML = "";
   let total = 0;
 
   carrito.forEach(p => {
     const item = document.createElement("div");
-    item.innerHTML = `
-      <span>${p.nombre} x${p.cantidad} - $${p.precio * p.cantidad}</span>
-      <button onclick="eliminarDelCarrito(${p.id})">❌</button>
-    `;
+    item.className = "carrito-item";
+
+    const spanNombre = document.createElement("span");
+    spanNombre.innerHTML = `${p.nombre} x `;
+    
+    const input = document.createElement("input");
+    input.type = "number";
+    input.value = p.cantidad;
+    input.min = 1;
+    input.addEventListener("change", () => actualizarCantidad(p.id, input.value));
+
+    spanNombre.appendChild(input);
+
+    const spanSubtotal = document.createElement("span");
+    spanSubtotal.textContent = `Subtotal: $${p.precio * p.cantidad}`;
+
+    const btnEliminar = document.createElement("button");
+    btnEliminar.textContent = "❌";
+    btnEliminar.addEventListener("click", () => eliminarDelCarrito(p.id));
+
+    item.appendChild(spanNombre);
+    item.appendChild(spanSubtotal);
+    item.appendChild(btnEliminar);
+
     contenedorCarrito.appendChild(item);
+
     total += p.precio * p.cantidad;
   });
 
   totalDiv.textContent = carrito.length > 0 ? `Total: $${total}` : "Carrito vacío";
 
-  // Guardamos el carrito en localStorage
   localStorage.setItem("carrito", JSON.stringify(carrito));
 }
 
-// ---- Recuperar carrito al cargar la página - lo hice con gpt
-window.addEventListener("load", () => {
+// ---- Animación visual ----
+function animacionCarrito() {
+  contenedorCarrito.classList.add("agregado");
+  setTimeout(() => contenedorCarrito.classList.remove("agregado"), 300);
+}
+
+// ---- Recuperar carrito ----
+window.addEventListener("DOMContentLoaded", () => {
   const carritoGuardado = localStorage.getItem("carrito");
   if (carritoGuardado) {
     carrito = JSON.parse(carritoGuardado);
-    actualizarCarrito();
+  }
+
+  renderProductos();
+  actualizarCarrito();
+
+  // Finalizar compra
+  if (finalizarBtn) {
+    finalizarBtn.addEventListener("click", finalizarCompra);
   }
 });
 
 // ---- Finalizar compra ----
-finalizarBtn.addEventListener("click", () => {
+function finalizarCompra() {
   if (carrito.length === 0) {
-    alert("Tu carrito está vacío.");
+    mostrarModal("Tu carrito está vacío.");
     return;
   }
 
-  let mensaje = "Resumen de tu compra:\n";
+  let mensaje = "<h3>Resumen de tu compra:</h3><ul>";
   carrito.forEach(p => {
-    mensaje += `${p.nombre} x${p.cantidad} - $${p.precio * p.cantidad}\n`;
+    mensaje += `<li>${p.nombre} x${p.cantidad} - $${p.precio * p.cantidad}</li>`;
   });
   const total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
-  mensaje += `\nTotal a pagar: $${total}`;
+  mensaje += `</ul><p><strong>Total a pagar: $${total}</strong></p>`;
 
-  alert(mensaje);
+  mostrarModal(mensaje);
 
-  //Limpiar carrito
   carrito = [];
   localStorage.removeItem("carrito");
   actualizarCarrito();
-  console.log("Compra finalizada correctamente.");
-});
+}
+
+// ---- Modal simple ----
+function mostrarModal(contenido) {
+  const modal = document.createElement("div");
+  modal.className = "modal";
+  modal.innerHTML = `
+    <div class="modal-contenido">
+      ${contenido}
+      <button id="cerrarModal">Cerrar</button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  modal.querySelector("#cerrarModal").addEventListener("click", () => {
+    modal.remove();
+  });
+}
