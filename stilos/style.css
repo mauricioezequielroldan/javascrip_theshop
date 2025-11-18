@@ -39,7 +39,7 @@ main {
   margin: 0 auto;
 }
 
-/* --- PROMOS MODERNOS --- */
+/* --- PROMOS --- */
 #promos {
   margin-bottom: 50px;
 }
@@ -52,58 +52,47 @@ main {
   text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
+/* Contenedor de promos */
 .promo-container {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
 }
 
+/* Cada promo */
 .promo {
   position: relative;
-  width: 250px;
-  border-radius: 15px;
+  width: 220px;
+  height: 220px;
   overflow: hidden;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-  transform: translateY(30px) scale(0.95);
-  opacity: 0;
-  animation: fadeInUp 0.8s forwards;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
+.promo:hover {
+  transform: scale(1.05);
+}
+
+/* Imagen */
 .promo img {
   width: 100%;
-  display: block;
-  border-radius: 15px;
+  height: 100%;
+  object-fit: cover;
 }
 
+/* Overlay */
 .promo-overlay {
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   background: rgba(0,0,0,0.5);
   color: white;
-  opacity: 0;
-  transition: opacity 0.3s ease;
   text-align: center;
-}
-
-.promo:hover {
-  transform: translateY(-5px) scale(1.05) rotateZ(1deg);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-  filter: brightness(1.1);
-}
-
-.promo:hover .promo-overlay {
-  opacity: 1;
-}
-
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
 }
 
 /* --- PRODUCTOS --- */
@@ -114,28 +103,40 @@ main {
   margin-top: 20px;
 }
 
-.producto {
+.card {
   background: white;
   border-radius: 12px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
   padding: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  text-align: center;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.producto:hover {
+.card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 12px rgba(0,0,0,0.25);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
 }
 
-.producto h3 {
-  color: #444;
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  margin-bottom: 10px;
 }
 
-.producto p {
+.card h3 {
+  margin-bottom: 5px;
+}
+
+.card p {
   font-weight: 500;
-  margin: 8px 0;
 }
 
+.card button {
+  margin-top: 10px;
+}
+
+/* Botones */
 button {
   background-color: #444;
   color: white;
@@ -144,8 +145,6 @@ button {
   border-radius: 8px;
   cursor: pointer;
   font-size: 15px;
-  margin-top: 10px;
-  transition: background-color 0.2s;
 }
 
 button:hover {
@@ -156,25 +155,38 @@ button:hover {
 #carrito {
   margin: 30px auto;
   max-width: 600px;
-  text-align: left;
   background: #fff;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.15);
 }
 
-#carrito div {
+/* Cada ítem del carrito */
+.carrito-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
   border-bottom: 1px solid #eee;
-  padding: 8px 0;
+}
+
+/* Imagen del carrito mejorada */
+.carrito-item img {
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #fff;
+  padding: 4px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
 
 #carrito button {
   background-color: #d62828;
   border-radius: 50%;
-  padding: 5px 10px;
+  padding: 6px 10px;
   font-size: 14px;
 }
 
@@ -183,20 +195,20 @@ button:hover {
 }
 
 #total {
-  font-weight: bold;
+  text-align: right;
   font-size: 20px;
+  font-weight: bold;
   color: #264653;
   margin: 15px 0;
-  text-align: right;
 }
 
-/* --- BOTÓN FINALIZAR --- */
+/* FINALIZAR */
 #finalizar {
   display: block;
   background-color: #023047;
   padding: 14px 35px;
   font-size: 17px;
-  margin: 25px auto 0;
+  margin: 20px auto 0;
   border-radius: 8px;
 }
 
@@ -204,66 +216,11 @@ button:hover {
   background-color: #03506f;
 }
 
-/* --- FOOTER --- */
+/* FOOTER */
 footer {
   background-color: #555;
   color: white;
   text-align: center;
   padding: 15px 0;
   margin-top: 50px;
-  font-weight: 500;
-  box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-}
-/* Efecto visual cuando se agrega al carrito */
-#carrito.agregado {
-  animation: flash 0.3s;
-}
-
-@keyframes flash {
-  0% { background-color: #fff; }
-  50% { background-color: #d9f7be; }
-  100% { background-color: #fff; }
-}
-
-/* Inputs del carrito */
-.carrito-item input[type="number"] {
-  width: 50px;
-  margin-left: 5px;
-}
-
-/* Modal */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-contenido {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  max-width: 400px;
-  width: 90%;
-  text-align: center;
-}
-
-.modal-contenido button {
-  margin-top: 15px;
-  padding: 10px 20px;
-  background-color: #023047;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.modal-contenido button:hover {
-  background-color: #03506f;
 }

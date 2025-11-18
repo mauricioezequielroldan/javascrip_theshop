@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "nombre": "Caramelos",
+    "precio": 35000,
+    "imagen": "image/caramelos.png"
+  },
+  {
+    "id": 2,
+    "nombre": "Bebidas",
+    "precio": 28000,
+    "imagen":"image/bebidas.png"
+  },
+  {
+    "id": 3,
+    "nombre": "Chocolates",
+    "precio": 30000,
+    "imagen": "image/choklits.png"
+  }
+]

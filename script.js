@@ -1,11 +1,4 @@
-// ---- Datos base ----
-const productos = [
-  { id: 1, nombre: "Cigarrillos", precio: 2500 },
-  { id: 2, nombre: "Bebida", precio: 4800 },
-  { id: 3, nombre: "Galletitas", precio: 3100 },
-  { id: 4, nombre: "Caramelos", precio: 1500 }
-];
-
+let productos = [];
 let carrito = [];
 
 // ---- Selectores ----
@@ -14,150 +7,133 @@ const contenedorCarrito = document.getElementById("carrito");
 const totalDiv = document.getElementById("total");
 const finalizarBtn = document.getElementById("finalizar");
 
+// ---- Cargar productos desde JSON ----
+async function cargarProductos() {
+    try {
+        const res = await fetch("./productos.json");
+        productos = await res.json();
+        renderProductos();
+    } catch (error) {
+        console.error("Error al cargar productos:", error);
+    }
+}
+
 // ---- Render productos ----
 function renderProductos() {
-  contenedor.innerHTML = ""; // limpiar
-  productos.forEach(p => {
-    const card = document.createElement("div");
-    card.className = "producto";
-    card.innerHTML = `
-      <h3>${p.nombre}</h3>
-      <p>Precio: $${p.precio}</p>
-      <button>Agregar al carrito</button>
-    `;
-    const btn = card.querySelector("button");
-    btn.addEventListener("click", () => agregarAlCarrito(p.id));
-    contenedor.appendChild(card);
-  });
+    contenedor.innerHTML = "";
+
+    productos.forEach(prod => {
+        const item = document.createElement("div");
+        item.className = "card";
+        item.innerHTML = `
+            <img src="${prod.imagen}" alt="${prod.nombre}">
+            <h3>${prod.nombre}</h3>
+            <p>Precio: $${prod.precio}</p>
+            <button onclick="agregarAlCarrito(${prod.id})">Agregar</button>
+        `;
+        contenedor.appendChild(item);
+    });
 }
 
 // ---- Agregar al carrito ----
 function agregarAlCarrito(id) {
-  const producto = productos.find(p => p.id === id);
-  const itemExistente = carrito.find(p => p.id === id);
+    const producto = productos.find(p => p.id === id);
+    carrito.push(producto);
 
-  if (itemExistente) {
-    itemExistente.cantidad++;
-  } else {
-    carrito.push({ ...producto, cantidad: 1 });
+    Swal.fire({
+        icon: "success",
+        title: "Producto agregado",
+        text: `${producto.nombre} fue agregado al carrito`,
+        timer: 1200,
+        showConfirmButton: false
+    });
+
+    renderCarrito();
+}
+
+// ---- Render carrito ----
+function renderCarrito() {
+    contenedorCarrito.innerHTML = "";
+
+    carrito.forEach((prod, index) => {
+        const item = document.createElement("div");
+        item.className = "carrito-item";
+        item.innerHTML = `
+            <img src="${prod.imagen}" alt="${prod.nombre}">
+            <p>${prod.nombre} - $${prod.precio}</p>
+            <button onclick="eliminarProducto(${index})">❌</button>
+        `;
+        contenedorCarrito.appendChild(item);
+    });
+
+    actualizarTotal();
+}
+
+// ---- Eliminar un producto ----
+function eliminarProducto(index) {
+    carrito.splice(index, 1);
+    renderCarrito();
+}
+
+// ---- Total ----
+function actualizarTotal() {
+    const total = carrito.reduce((acc, prod) => acc + prod.precio, 0);
+    totalDiv.textContent = total;
+}
+
+// ---- Finalizar compra (mejorado) ----
+finalizarBtn.addEventListener("click", () => {
+  if (!carrito || carrito.length === 0) {
+    return Swal.fire({
+      icon: "warning",
+      title: "Carrito vacío",
+      text: "Agrega productos antes de finalizar."
+    });
   }
 
-  actualizarCarrito();
-  animacionCarrito();
-}
-
-// ---- Eliminar del carrito ----
-function eliminarDelCarrito(id) {
-  carrito = carrito.filter(p => p.id !== id);
-  actualizarCarrito();
-}
-
-// ---- Actualizar cantidad ----
-function actualizarCantidad(id, cantidad) {
-  const producto = carrito.find(p => p.id === id);
-  if (producto) {
-    producto.cantidad = parseInt(cantidad) || 1; // evita NaN
-    actualizarCarrito();
-  }
-}
-
-// ---- Actualizar carrito ----
-function actualizarCarrito() {
-  contenedorCarrito.innerHTML = "";
-  let total = 0;
-
+  // Construimos el resumen HTML que mostrará SweetAlert
+  const total = carrito.reduce((acc, p) => acc + p.precio * (p.cantidad || 1), 0);
+  let listaHTML = '<ul style="text-align:left;padding-left:18px">';
   carrito.forEach(p => {
-    const item = document.createElement("div");
-    item.className = "carrito-item";
-
-    const spanNombre = document.createElement("span");
-    spanNombre.innerHTML = `${p.nombre} x `;
-    
-    const input = document.createElement("input");
-    input.type = "number";
-    input.value = p.cantidad;
-    input.min = 1;
-    input.addEventListener("change", () => actualizarCantidad(p.id, input.value));
-
-    spanNombre.appendChild(input);
-
-    const spanSubtotal = document.createElement("span");
-    spanSubtotal.textContent = `Subtotal: $${p.precio * p.cantidad}`;
-
-    const btnEliminar = document.createElement("button");
-    btnEliminar.textContent = "❌";
-    btnEliminar.addEventListener("click", () => eliminarDelCarrito(p.id));
-
-    item.appendChild(spanNombre);
-    item.appendChild(spanSubtotal);
-    item.appendChild(btnEliminar);
-
-    contenedorCarrito.appendChild(item);
-
-    total += p.precio * p.cantidad;
+    const qty = p.cantidad || 1;
+    listaHTML += `<li style="margin-bottom:6px">${p.nombre} x${qty} — $${p.precio * qty}</li>`;
   });
+  listaHTML += `</ul><p style="text-align:right;font-weight:700;margin-top:8px">Total: $${total}</p>`;
 
-  totalDiv.textContent = carrito.length > 0 ? `Total: $${total}` : "Carrito vacío";
+  // Confirmación final con SweetAlert (resumen + botones)
+  Swal.fire({
+    title: 'Confirmar compra',
+    html: `<h3>Resumen de compra</h3>${listaHTML}`,
+    icon: 'info',
+    showCancelButton: true,
+    confirmButtonText: 'Confirmar y pagar',
+    cancelButtonText: 'Cancelar',
+    width: '600px',
+    focusConfirm: false
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Simulamos el pago y mostramos éxito
+      Swal.fire({
+        title: '¡Compra realizada!',
+        html: `<p>Gracias por tu compra. Se procesó un pago de <strong>$${total}</strong>.</p>`,
+        icon: 'success'
+      });
 
-  localStorage.setItem("carrito", JSON.stringify(carrito));
-}
-
-// ---- Animación visual ----
-function animacionCarrito() {
-  contenedorCarrito.classList.add("agregado");
-  setTimeout(() => contenedorCarrito.classList.remove("agregado"), 300);
-}
-
-// ---- Recuperar carrito ----
-window.addEventListener("DOMContentLoaded", () => {
-  const carritoGuardado = localStorage.getItem("carrito");
-  if (carritoGuardado) {
-    carrito = JSON.parse(carritoGuardado);
-  }
-
-  renderProductos();
-  actualizarCarrito();
-
-  // Finalizar compra
-  if (finalizarBtn) {
-    finalizarBtn.addEventListener("click", finalizarCompra);
-  }
+      // Vaciar carrito, limpiar storage y actualizar UI
+      carrito = [];
+      try { localStorage.removeItem('carrito'); } catch(e) {}
+      renderCarrito();
+    } else {
+      // Si cancela, mostramos mensaje informativo (opcional)
+      Swal.fire({
+        title: 'Compra cancelada',
+        icon: 'info',
+        timer: 1400,
+        showConfirmButton: false
+      });
+    }
+  });
 });
 
-// ---- Finalizar compra ----
-function finalizarCompra() {
-  if (carrito.length === 0) {
-    mostrarModal("Tu carrito está vacío.");
-    return;
-  }
-
-  let mensaje = "<h3>Resumen de tu compra:</h3><ul>";
-  carrito.forEach(p => {
-    mensaje += `<li>${p.nombre} x${p.cantidad} - $${p.precio * p.cantidad}</li>`;
-  });
-  const total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
-  mensaje += `</ul><p><strong>Total a pagar: $${total}</strong></p>`;
-
-  mostrarModal(mensaje);
-
-  carrito = [];
-  localStorage.removeItem("carrito");
-  actualizarCarrito();
-}
-
-// ---- Modal simple ----
-function mostrarModal(contenido) {
-  const modal = document.createElement("div");
-  modal.className = "modal";
-  modal.innerHTML = `
-    <div class="modal-contenido">
-      ${contenido}
-      <button id="cerrarModal">Cerrar</button>
-    </div>
-  `;
-  document.body.appendChild(modal);
-
-  modal.querySelector("#cerrarModal").addEventListener("click", () => {
-    modal.remove();
-  });
-}
+// ---- INICIAR ----
+cargarProductos();

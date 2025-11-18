@@ -16,32 +16,31 @@
 
 <main>
   <!-- Sección de promos -->
-  <section id="promos">
-    <h2>Promociones Destacadas</h2>
-    <div class="promo-container">
-      <div class="promo">
-        <img src="./image/promo bebida.png" alt="Promo 1">
-        <div class="promo-overlay">
-          <h3>Promo Bebida</h3>
-          <p>Oferta especial</p>
-        </div>
-      </div>
-      <div class="promo">
-        <img src="./image/chocolates.png" alt="Promo 2">
-        <div class="promo-overlay">
-          <h3>Chocolates</h3>
-          <p>¡2x1 por tiempo limitado!</p>
-        </div>
-      </div>
-      <div class="promo">
-        <img src="./image/chocolates1.png" alt="Promo 3">
-        <div class="promo-overlay">
-          <h3>Chocolates Premium</h3>
-          <p>Edición especial</p>
-        </div>
-      </div>
+  <div class="promo-container">
+  <div class="promo">
+    <img src="./image/promo bebida.png" alt="Promo 1">
+    <div class="promo-overlay">
+      <h3>Promo Bebida</h3>
+      <p>Oferta especial</p>
     </div>
-  </section>
+  </div>
+
+  <div class="promo">
+    <img src="./image/chocolates.png" alt="Promo 2">
+    <div class="promo-overlay">
+      <h3>Chocolates</h3>
+      <p>¡2x1 por tiempo limitado!</p>
+    </div>
+  </div>
+
+  <div class="promo">
+    <img src="./image/chocolates1.png" alt="Promo 3">
+    <div class="promo-overlay">
+      <h3>Chocolates Premium</h3>
+      <p>No te lo pierdas</p>
+    </div>
+  </div>
+  </div>
 
   <!-- Sección de productos -->
   <section>
@@ -54,7 +53,7 @@
   <section>
     <h2>Carrito de Compras</h2>
     <div id="carrito"></div>
-    <div id="total"></div>
+    <h3 id="total">Total: $0</h3>
     <button id="finalizar">Finalizar compra</button>
   </section>
 </main>
@@ -62,6 +61,9 @@
 <footer>
   <p>Mauri copyright</p>
 </footer>
+
+<!-- SWEET ALERT (OBLIGATORIO PARA QUE FUNCIONE) -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script src="script.js"></script>
 </body>
